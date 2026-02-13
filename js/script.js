@@ -1,87 +1,58 @@
 /* ==========================================================================
    PORTFOLIO — script.js
-   Features:
-   1. Navbar: transparent → opaque on scroll
-   2. Active nav link via Intersection Observer
-   3. Mobile nav toggle
-   4. Scroll-reveal animations
-   5. Contact form validation + feedback
-   6. Footer year auto-update
+   1. Active nav link (scroll-based)
+   2. Mobile nav toggle
+   3. Scroll-reveal animations
+   4. Contact form validation + feedback
+   5. Footer year
    ========================================================================== */
 
-
-/* ==========================================================================
-   UTILITY: Wait for DOM to be fully loaded before running any code
-   ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
 
   /* =========================================================================
-     1. NAVBAR — SCROLL BEHAVIOUR
-     Adds .scrolled class to #navbar once the user scrolls past the hero.
-     The CSS transitions the navbar from transparent to navy background.
+     UTILITY: throttle — limits how often fn fires during fast scroll events
+     Defined first (function declaration = hoisted) so everything below can use it.
      ========================================================================= */
-  const navbar = document.getElementById('navbar');
-
-  // Distance (px) after which navbar becomes opaque
-  const SCROLL_THRESHOLD = 80;
-
-  function handleNavbarScroll() {
-    if (window.scrollY > SCROLL_THRESHOLD) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+  function throttle(fn, limit) {
+    let last = 0;
+    return function (...args) {
+      const now = Date.now();
+      if (now - last >= limit) { last = now; fn.apply(this, args); }
+    };
   }
 
-  // Throttle scroll handler for performance
-  window.addEventListener('scroll', throttle(handleNavbarScroll, 100));
-
-  // Run once on load in case page is refreshed mid-scroll
-  handleNavbarScroll();
-
 
   /* =========================================================================
-     2. ACTIVE NAV LINK — INTERSECTION OBSERVER
-     Watches each <section> element. When a section crosses the threshold
-     of the viewport, the matching nav link gets .active class and any
-     previously active link loses it.
-
-     How it works:
-     - querySelectorAll grabs all sections that have an id
-     - IntersectionObserver fires whenever a section enters/exits viewport
-     - We match the section's id to the nav <a> whose href="#id"
+     1. ACTIVE NAV LINK
+     On scroll, find the section whose top edge is closest to (but above)
+     the 33% mark of the viewport. Highlight the matching nav link.
+     Works in both scroll directions — no IntersectionObserver quirks.
      ========================================================================= */
-  const sections  = document.querySelectorAll('section[id]');
-  const navLinks  = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
 
-  const observerOptions = {
-    root:       null,        // viewport
-    rootMargin: `-${navbar.offsetHeight}px 0px -40% 0px`,
-    // section must pass navbar height from top AND be above 40% from bottom
-    threshold:  0
-  };
+  function updateActiveNav() {
+    const triggerY = window.scrollY + window.innerHeight * 0.33;
+    let currentId = sections[0]?.id || '';
 
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-
-      // Remove active from all links
-      navLinks.forEach(link => link.classList.remove('active'));
-
-      // Add active to the matching link
-      const targetId   = entry.target.id;
-      const activeLink = document.querySelector(`.nav-link[href="#${targetId}"]`);
-      if (activeLink) activeLink.classList.add('active');
+    sections.forEach(sec => {
+      if (sec.offsetTop <= triggerY) currentId = sec.id;
     });
-  }, observerOptions);
 
-  sections.forEach(section => sectionObserver.observe(section));
+    navLinks.forEach(link => {
+      // Don't remove active from the "Hire Me!" CTA link — it has no section
+      if (link.classList.contains('nav-link--cta')) return;
+      link.classList.toggle('active', link.getAttribute('href') === `#${currentId}`);
+    });
+  }
+
+  window.addEventListener('scroll', throttle(updateActiveNav, 80));
+  updateActiveNav(); // run on load
 
 
   /* =========================================================================
-     3. MOBILE NAV TOGGLE
-     The .nav-toggle button shows/hides .nav-links on small screens.
-     Clicking a nav link also closes the menu.
+     2. MOBILE NAV TOGGLE
+     Hamburger ↔ ✕, aria-expanded, close on link click.
      ========================================================================= */
   const navToggle = document.querySelector('.nav-toggle');
   const navLinksEl = document.querySelector('.nav-links');
@@ -89,215 +60,154 @@ document.addEventListener('DOMContentLoaded', () => {
   if (navToggle && navLinksEl) {
     navToggle.addEventListener('click', () => {
       const isOpen = navLinksEl.classList.toggle('open');
-      // Update aria-expanded for accessibility
-      navToggle.setAttribute('aria-expanded', isOpen);
-      // Swap hamburger icon to X when open
-      navToggle.textContent = isOpen ? '\u00D7' : '\u2630';  /* × : ☰ */
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navToggle.innerHTML = isOpen ? '&times;' : '&#9776;';
     });
 
-    // Close menu when any nav link is clicked
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
         navLinksEl.classList.remove('open');
         navToggle.setAttribute('aria-expanded', 'false');
-        navToggle.textContent = '\u2630';
+        navToggle.innerHTML = '&#9776;';
       });
     });
   }
 
 
   /* =========================================================================
-     4. SCROLL-REVEAL ANIMATION
-     Any element with class .reveal will fade + slide up into view when
-     it enters the viewport. Add class="reveal" to cards, timeline items,
-     section content, etc. in your HTML.
-
-     For staggered delays on child elements add a data-delay attribute:
-       <div class="project-card reveal" data-delay="100"> (ms)
+     3. SCROLL-REVEAL
+     Add class="reveal" to any element in the HTML.
+     Optional: add data-delay="150" (ms) for staggered entrance.
      ========================================================================= */
-  const revealElements = document.querySelectorAll('.reveal');
+  const revealEls = document.querySelectorAll('.reveal');
 
-  const revealObserver = new IntersectionObserver((entries) => {
+  const revealObs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-
-      const delay = entry.target.dataset.delay || 0;
-
-      setTimeout(() => {
-        entry.target.classList.add('visible');
-      }, Number(delay));
-
-      // Unobserve after reveal so it doesn't toggle back
-      revealObserver.unobserve(entry.target);
+      const delay = Number(entry.target.dataset.delay || 0);
+      setTimeout(() => entry.target.classList.add('visible'), delay);
+      revealObs.unobserve(entry.target);
     });
-  }, {
-    threshold:  0.12,   // trigger when 12% of element is visible
-    rootMargin: '0px 0px -50px 0px'
-  });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-  revealElements.forEach(el => revealObserver.observe(el));
+  revealEls.forEach(el => revealObs.observe(el));
 
 
   /* =========================================================================
-     5. CONTACT FORM — VALIDATION + SUBMISSION FEEDBACK
-     Validates required fields client-side. On success, shows a confirmation
-     message. Hook up the actual submission logic (Formspree / EmailJS /
-     your own API) inside the handleFormSubmit function.
+     4. CONTACT FORM — validation + submission feedback
+     ─────────────────────────────────────────────────────
+     TO CONNECT A REAL EMAIL SERVICE:
+     Replace the mock setTimeout block (marked below) with a fetch() call.
+
+     Formspree example (free tier, no backend needed):
+       1. Go to https://formspree.io, create a form, get your form ID
+       2. Replace the mock block with:
+
+         fetch('https://formspree.io/f/YOUR_FORM_ID', {
+           method: 'POST',
+           headers: { 'Accept': 'application/json' },
+           body: new FormData(contactForm)
+         })
+         .then(res => res.ok ? onSuccess() : onError())
+         .catch(() => onError())
+         .finally(() => resetBtn());
      ========================================================================= */
-  const contactForm    = document.getElementById('contact-form');
-  const formFeedback   = document.getElementById('form-feedback');
+  const contactForm  = document.getElementById('contact-form');
+  const formFeedback = document.getElementById('form-feedback');
 
-  if (contactForm) {
-    contactForm.addEventListener('submit', handleFormSubmit);
-  }
+  if (!contactForm) return; // guard if form not in DOM
 
-  function handleFormSubmit(e) {
+  contactForm.addEventListener('submit', e => {
     e.preventDefault();
+    clearErrors();
 
-    // --- 5a. Gather field references ---
-    const nameField    = document.getElementById('name');
-    const emailField   = document.getElementById('email');
-    const messageField = document.getElementById('message');
+    const nameEl    = document.getElementById('name');
+    const emailEl   = document.getElementById('email');
+    const messageEl = document.getElementById('message');
+    let valid = true;
 
-    // --- 5b. Clear previous errors ---
-    clearFormErrors();
-
-    // --- 5c. Validate fields ---
-    let isValid = true;
-
-    if (!nameField.value.trim()) {
-      showFieldError('name-error', nameField, 'Please enter your name.');
-      isValid = false;
+    if (!nameEl.value.trim()) {
+      setError('name-error', nameEl, 'Please enter your name.');
+      valid = false;
     }
-
-    if (!emailField.value.trim()) {
-      showFieldError('email-error', emailField, 'Please enter your email address.');
-      isValid = false;
-    } else if (!isValidEmail(emailField.value.trim())) {
-      showFieldError('email-error', emailField, 'Please enter a valid email address.');
-      isValid = false;
+    if (!emailEl.value.trim()) {
+      setError('email-error', emailEl, 'Please enter your email.');
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+      setError('email-error', emailEl, 'Please enter a valid email address.');
+      valid = false;
     }
-
-    if (!messageField.value.trim()) {
-      showFieldError('message-error', messageField, 'Please enter a message.');
-      isValid = false;
+    if (!messageEl.value.trim()) {
+      setError('message-error', messageEl, 'Please write a message.');
+      valid = false;
     }
+    if (!valid) return;
 
-    if (!isValid) return;
-
-    // --- 5d. Disable button and show loading state ---
     const submitBtn = contactForm.querySelector('button[type="submit"]');
-    submitBtn.disabled    = true;
+    submitBtn.disabled   = true;
     submitBtn.textContent = 'Sending…';
 
-    // --- 5e. TODO: Replace this block with your real API call ---
-    // Example using Formspree:
-    //
-    // fetch('https://formspree.io/f/YOUR_FORM_ID', {
-    //   method:  'POST',
-    //   headers: { 'Accept': 'application/json' },
-    //   body:    new FormData(contactForm)
-    // })
-    // .then(res => res.ok ? onFormSuccess() : onFormError())
-    // .catch(() => onFormError())
-    // .finally(() => {
-    //   submitBtn.disabled    = false;
-    //   submitBtn.textContent = 'Send Message';
-    // });
-    //
-    // Remove the mock timeout below once you wire up a real endpoint.
-
-    // Mock delay — simulates async network request
+    // ── MOCK SUBMISSION ── Replace this block with your real fetch() call ──
     setTimeout(() => {
-      onFormSuccess();
-      submitBtn.disabled    = false;
-      submitBtn.textContent = 'Send Message';
-    }, 1500);
-  }
+      onSuccess();
+      resetBtn(submitBtn);
+    }, 1400);
+    // ──────────────────────────────────────────────────────────────────────
+  });
 
-  /* --- Helpers --- */
-
-  function showFieldError(errorId, inputEl, message) {
-    const errorEl = document.getElementById(errorId);
-    if (errorEl) errorEl.textContent = message;
-    inputEl.classList.add('error');
-
-    // Remove error state as soon as user starts retyping
-    inputEl.addEventListener('input', () => {
-      inputEl.classList.remove('error');
-      if (errorEl) errorEl.textContent = '';
+  function setError(errorId, input, msg) {
+    const el = document.getElementById(errorId);
+    if (el) el.textContent = msg;
+    input.classList.add('error');
+    input.addEventListener('input', () => {
+      input.classList.remove('error');
+      const el = document.getElementById(errorId);
+      if (el) el.textContent = '';
     }, { once: true });
   }
 
-  function clearFormErrors() {
+  function clearErrors() {
     document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
     document.querySelectorAll('.form-input.error').forEach(el => el.classList.remove('error'));
     formFeedback.textContent = '';
     formFeedback.className   = 'form-feedback';
   }
 
-  function isValidEmail(email) {
-    // Simple regex — adequate for client-side UX, server must re-validate
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  function onFormSuccess() {
+  function onSuccess() {
     contactForm.reset();
     formFeedback.textContent = '✓ Message sent! I\'ll get back to you soon.';
-    formFeedback.classList.add('success');
+    formFeedback.className   = 'form-feedback success';
   }
 
-  function onFormError() {
-    formFeedback.textContent = '✕ Something went wrong. Please try again or email me directly.';
-    formFeedback.classList.add('error');
+  function onError() {
+    formFeedback.textContent = '✕ Something went wrong. Please email me directly.';
+    formFeedback.className   = 'form-feedback error';
+  }
+
+  function resetBtn(btn) {
+    btn.disabled     = false;
+    btn.textContent  = 'Send Message →';
   }
 
 
   /* =========================================================================
-     6. FOOTER — DYNAMIC YEAR
-     Keeps copyright year always current without manual edits.
+     5. FOOTER YEAR
      ========================================================================= */
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 
   /* =========================================================================
-     UTILITY: Throttle
-     Limits how often a function fires during rapid events (scroll, resize).
-     ========================================================================= */
-  function throttle(fn, limit) {
-    let lastCall = 0;
-    return function (...args) {
-      const now = Date.now();
-      if (now - lastCall >= limit) {
-        lastCall = now;
-        fn.apply(this, args);
-      }
-    };
-  }
+     TODO IDEAS — future enhancements
+     ─────────────────────────────────
+     A) Project filter buttons by tag (Academic / Personal / Hackathon)
+        → add click listeners on .filter-btn, toggle .hidden on cards
 
+     B) Add class="reveal" + data-delay="100/200/300" to timeline cards
+        and project cards for staggered entrance animations
 
-  /* =========================================================================
-     TODO HOOKS — Add these features as you build out the site:
-
-     A) Project filter buttons
-        - Add click listeners to .filter-btn elements
-        - Toggle .hidden on .project-card items based on data-category attr
-        - Animate the filtering with CSS transitions
-
-     B) Timeline entry animations
-        - Add class="reveal" + data-delay attributes to .timeline-item elements
-        - The revealObserver above will handle them automatically
-
-     C) Typed / animated hero subtitle
-        - Use a simple setInterval to cycle through role strings in .hero-title
-
-     D) Lightbox for project images
-        - On card click, open full-size image in a modal overlay
-
-     E) Theme toggle (light/dark)
-        - Add a toggle button that swaps a data-theme attr on <html>
-        - Define :root[data-theme="dark"] overrides in CSS
+     C) Animate the hero name letters in on page load using CSS keyframes
+        → add .hero-name span per word, stagger with animation-delay
      ========================================================================= */
 
 });
