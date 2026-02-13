@@ -1,1 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name — Portfolio</title>
 
+  <!-- ============================================================
+    FONTS
+    Cormorant Garamond → formal, elegant headings
+    Poppins            → clean, friendly body text
+  ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ============================================================
+    NAVIGATION
+    - Fixed at top, transparent → becomes opaque on scroll (JS)
+    - Logo / name on the left, links on the right
+    - Each <a> targets a section by ID for smooth scroll
+    - JS adds .active class to the link matching the visible section
+  ============================================================ -->
+  <header id="navbar">
+    <nav class="nav-container">
+      <a href="#home" class="nav-logo">Your Name</a>
+
+      <!-- TODO: add hamburger button here for mobile menu toggle -->
+      <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+
+      <ul class="nav-links">
+        <li><a href="#home"       class="nav-link active">Home</a></li>
+        <li><a href="#about"      class="nav-link">About</a></li>
+        <li><a href="#experience" class="nav-link">Experience</a></li>
+        <li><a href="#projects"   class="nav-link">Projects</a></li>
+        <li><a href="#contact"    class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+
+  <main>
+
+    <!-- ============================================================
+      SECTION 1 — HOME (Hero)
+      - Full viewport height
+      - Short punchy intro: name, title, CTA button
+      - TODO: optional decorative background shape / accent blob
+    ============================================================ -->
+    <section id="home" class="section section--hero">
+      <div class="hero-content">
+        <p class="hero-greeting">Hello, I'm</p>
+        <h1 class="hero-name">Your Name</h1>
+        <h2 class="hero-title">Your Title / Role</h2>
+        <p class="hero-tagline">
+          <!-- One sentence that captures what you do and who you do it for -->
+          A brief, memorable tagline goes here.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn--primary">View My Work</a>
+          <a href="#contact"  class="btn btn--outline">Get In Touch</a>
+        </div>
+      </div>
+      <!-- TODO: optional hero illustration / profile photo goes here -->
+    </section>
+
+
+    <!-- ============================================================
+      SECTION 2 — ABOUT
+      - Two-column layout: photo/illustration on left, text on right
+      - Short bio + a few highlight stats (years exp, projects, etc.)
+      - TODO: add skill tags / pill badges beneath bio paragraph
+    ============================================================ -->
+    <section id="about" class="section section--about">
+      <div class="section-inner">
+        <h2 class="section-title">About Me</h2>
+
+        <div class="about-grid">
+          <!-- LEFT: profile image -->
+          <div class="about-image-wrap">
+            <img src="assets/profile.jpg" alt="Portrait of Your Name" class="about-image" />
+            <!-- TODO: add decorative navy border offset frame via CSS -->
+          </div>
+
+          <!-- RIGHT: bio text -->
+          <div class="about-text">
+            <p class="about-bio">
+              <!-- Write 2–3 paragraphs: who you are, your background,
+                   what drives you, and what makes you different. -->
+              Paragraph one — your story and background.
+            </p>
+            <p class="about-bio">
+              Paragraph two — your interests, values, approach to work.
+            </p>
+
+            <!-- Highlight stats row -->
+            <div class="about-stats">
+              <!-- TODO: duplicate .stat-item for each metric -->
+              <div class="stat-item">
+                <span class="stat-number">0+</span>
+                <span class="stat-label">Years Experience</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">0+</span>
+                <span class="stat-label">Projects Completed</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">0+</span>
+                <span class="stat-label">Happy Clients</span>
+              </div>
+            </div>
+
+            <!-- Skills / tech stack pill tags -->
+            <div class="about-skills">
+              <!-- TODO: add one .skill-tag per skill -->
+              <span class="skill-tag">Skill One</span>
+              <span class="skill-tag">Skill Two</span>
+            </div>
+
+            <a href="assets/resume.pdf" target="_blank" class="btn btn--primary">
+              Download CV
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+      SECTION 3 — EXPERIENCE (Timeline)
+      - Vertical centre line with alternating left/right cards
+      - Each .timeline-item has a dot on the line + date badge
+      - On mobile, collapse to single-column (CSS handles this)
+      - TODO: duplicate .timeline-item for each role
+    ============================================================ -->
+    <section id="experience" class="section section--experience">
+      <div class="section-inner">
+        <h2 class="section-title">Experience</h2>
+
+        <div class="timeline">
+          <!-- Centre spine line drawn via CSS ::before on .timeline -->
+
+          <!-- ITEM 1 (left side) -->
+          <div class="timeline-item timeline-item--left">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <span class="timeline-date">Month Year – Month Year</span>
+              <h3 class="timeline-role">Job Title</h3>
+              <p class="timeline-company">Company Name · Location</p>
+              <ul class="timeline-details">
+                <!-- TODO: 2–4 bullet points per role -->
+                <li>Key responsibility or achievement one.</li>
+                <li>Key responsibility or achievement two.</li>
+              </ul>
+              <!-- TODO: add optional tech stack tags: .timeline-tags -->
+            </div>
+          </div>
+
+          <!-- ITEM 2 (right side) -->
+          <div class="timeline-item timeline-item--right">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <span class="timeline-date">Month Year – Month Year</span>
+              <h3 class="timeline-role">Job Title</h3>
+              <p class="timeline-company">Company Name · Location</p>
+              <ul class="timeline-details">
+                <li>Key responsibility or achievement one.</li>
+                <li>Key responsibility or achievement two.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- TODO: add more .timeline-item blocks, alternating --left / --right -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+      SECTION 4 — PROJECTS (Cards)
+      - Responsive 3-column grid → 2 col → 1 col on mobile
+      - Each card: cover image, category tag, title, short desc, links
+      - Hover state: image subtle zoom + card lifts with shadow
+      - TODO: duplicate .project-card for each project
+      - TODO: optionally add filter buttons by category above the grid
+    ============================================================ -->
+    <section id="projects" class="section section--projects">
+      <div class="section-inner">
+        <h2 class="section-title">Projects</h2>
+
+        <!-- TODO: optional filter bar
+        <div class="project-filters">
+          <button class="filter-btn filter-btn--active">All</button>
+          <button class="filter-btn">Web</button>
+          <button class="filter-btn">Design</button>
+        </div>
+        -->
+
+        <div class="projects-grid">
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-card__image-wrap">
+              <img src="assets/project-1.jpg" alt="Project One screenshot" class="project-card__image" />
+              <!-- Hover overlay with quick links -->
+              <div class="project-card__overlay">
+                <a href="#" target="_blank" class="overlay-link" aria-label="Live demo">&#127758; Live</a>
+                <a href="#" target="_blank" class="overlay-link" aria-label="GitHub repo">&#10084; Code</a>
+              </div>
+            </div>
+            <div class="project-card__body">
+              <span class="project-card__tag">Category</span>
+              <h3 class="project-card__title">Project Title One</h3>
+              <p class="project-card__desc">
+                <!-- 1–2 sentences describing what the project does and your role -->
+                Short description of the project and the problem it solves.
+              </p>
+              <!-- Tech stack tags -->
+              <div class="project-card__tech">
+                <span class="tech-tag">Tech A</span>
+                <span class="tech-tag">Tech B</span>
+                <span class="tech-tag">Tech C</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- TODO: copy the .project-card block above for each project -->
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+      SECTION 5 — CONTACT
+      - Two-column: contact info on left, form on right
+      - Form fields: name, email, subject, message + submit button
+      - JS handles: basic validation + success/error feedback message
+      - TODO: wire up form action to Formspree, EmailJS, or your backend
+    ============================================================ -->
+    <section id="contact" class="section section--contact">
+      <div class="section-inner">
+        <h2 class="section-title">Get In Touch</h2>
+
+        <div class="contact-grid">
+
+          <!-- LEFT: contact details -->
+          <div class="contact-info">
+            <p class="contact-intro">
+              Have a project in mind or just want to say hello?
+              I'd love to hear from you.
+            </p>
+            <ul class="contact-details">
+              <li class="contact-detail-item">
+                <span class="contact-icon">&#9993;</span>
+                <a href="mailto:you@example.com">you@example.com</a>
+              </li>
+              <li class="contact-detail-item">
+                <span class="contact-icon">&#128205;</span>
+                <span>City, Country</span>
+              </li>
+            </ul>
+
+            <!-- Social links -->
+            <div class="contact-socials">
+              <!-- TODO: replace href values with real profile URLs -->
+              <a href="#" target="_blank" class="social-link" aria-label="LinkedIn">LinkedIn</a>
+              <a href="#" target="_blank" class="social-link" aria-label="GitHub">GitHub</a>
+              <a href="#" target="_blank" class="social-link" aria-label="Twitter / X">Twitter</a>
+            </div>
+          </div>
+
+          <!-- RIGHT: contact form -->
+          <form id="contact-form" class="contact-form" novalidate>
+
+            <div class="form-group">
+              <label for="name" class="form-label">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                placeholder="Jane Smith"
+                required
+              />
+              <!-- TODO: .form-error span shown by JS on invalid submit -->
+              <span class="form-error" id="name-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="jane@example.com"
+                required
+              />
+              <span class="form-error" id="email-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="subject" class="form-label">Subject</label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                class="form-input"
+                placeholder="Project Inquiry"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="message" class="form-label">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-input form-textarea"
+                rows="5"
+                placeholder="Tell me about your project..."
+                required
+              ></textarea>
+              <span class="form-error" id="message-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--full">
+              Send Message
+            </button>
+
+            <!-- JS inserts success or error feedback here -->
+            <p id="form-feedback" class="form-feedback" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================================================
+    FOOTER
+    - Simple one-liner with copyright + back-to-top link
+    - TODO: optionally expand with sitemap links or social icons
+  ============================================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">
+        &copy; <span id="footer-year"></span> Your Name. All rights reserved.
+      </p>
+      <a href="#home" class="footer-top-link" aria-label="Back to top">&#8593; Back to top</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
