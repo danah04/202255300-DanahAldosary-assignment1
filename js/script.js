@@ -96,21 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
   /* =========================================================================
      4. CONTACT FORM — validation + submission feedback
      ─────────────────────────────────────────────────────
-     TO CONNECT A REAL EMAIL SERVICE:
-     Replace the mock setTimeout block (marked below) with a fetch() call.
-
-     Formspree example (free tier, no backend needed):
-       1. Go to https://formspree.io, create a form, get your form ID
-       2. Replace the mock block with:
-
-         fetch('https://formspree.io/f/xlgaelwg', {
-           method: 'POST',
-           headers: { 'Accept': 'application/json' },
-           body: new FormData(contactForm)
-         })
-         .then(res => res.ok ? onSuccess() : onError())
-         .catch(() => onError())
-         .finally(() => resetBtn());
      ========================================================================= */
   const contactForm  = document.getElementById('contact-form');
   const formFeedback = document.getElementById('form-feedback');
@@ -198,5 +183,42 @@ document.addEventListener('DOMContentLoaded', () => {
      ========================================================================= */
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* =========================================================================
+   DID YOU KNOW? — FACT API
+   ========================================================================= */
+  const factText = document.getElementById('fact-text');
+  const factStatus = document.getElementById('fact-status');
+  const newFactBtn = document.getElementById('new-fact-btn');
+
+  async function loadFact() {
+    if (!factText || !factStatus) return;
+
+    try {
+      factStatus.textContent = 'Loading...';
+
+      const response = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/random');
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+
+      factText.textContent = data.text;
+      factStatus.textContent = '';
+
+    } catch (error) {
+      factStatus.textContent = 'Could not load a fact. Please try again.';
+      console.error(error);
+    }
+  }
+
+  if (newFactBtn) {
+    newFactBtn.addEventListener('click', loadFact);
+  }
+
+  // load first fact automatically
+  loadFact();
 
 });
