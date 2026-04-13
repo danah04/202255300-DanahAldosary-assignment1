@@ -18,6 +18,7 @@ https://dribbble.com/shots/26844524-Personal-portfolio-website-header
 - About Me
 - Experience (visual timeline)
 - Projects (card layout)
+- Did You Know?
 - Contact (form with validation)
 
 ### Interactivity
@@ -51,6 +52,12 @@ git clone https://github.com/your-username/id-name-assignment1.git
 3. Open `index.html` in your browser.
 
 No additional setup is required.
+
+---
+
+## API Integration
+
+This project integrates an external API to display random facts in a “Did You Know?” section. Users can generate new facts dynamically, and error handling ensures a message is shown if the API fails.
 
 ---
 
