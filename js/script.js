@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
        1. Go to https://formspree.io, create a form, get your form ID
        2. Replace the mock block with:
 
-         fetch('https://formspree.io/f/YOUR_FORM_ID', {
+         fetch('https://formspree.io/f/xlgaelwg', {
            method: 'POST',
            headers: { 'Accept': 'application/json' },
            body: new FormData(contactForm)
@@ -147,11 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.disabled   = true;
     submitBtn.textContent = 'Sending…';
 
-    // ── MOCK SUBMISSION ── Replace this block with your real fetch() call ──
-    setTimeout(() => {
-      onSuccess();
-      resetBtn(submitBtn);
-    }, 1400);
+    fetch('https://formspree.io/f/xlgaelwg', {
+           method: 'POST',
+           headers: { 'Accept': 'application/json' },
+           body: new FormData(contactForm)
+         })
+         .then(res => res.ok ? onSuccess() : onError())
+         .catch(() => onError())
+         .finally(() => resetBtn());
     // ──────────────────────────────────────────────────────────────────────
   });
 
@@ -195,19 +198,5 @@ document.addEventListener('DOMContentLoaded', () => {
      ========================================================================= */
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-
-  /* =========================================================================
-     TODO IDEAS — future enhancements
-     ─────────────────────────────────
-     A) Project filter buttons by tag (Academic / Personal / Hackathon)
-        → add click listeners on .filter-btn, toggle .hidden on cards
-
-     B) Add class="reveal" + data-delay="100/200/300" to timeline cards
-        and project cards for staggered entrance animations
-
-     C) Animate the hero name letters in on page load using CSS keyframes
-        → add .hero-name span per word, stagger with animation-delay
-     ========================================================================= */
 
 });
