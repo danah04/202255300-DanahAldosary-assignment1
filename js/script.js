@@ -91,10 +91,72 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   revealEls.forEach(el => revealObs.observe(el));
+ 
+  /* =========================================================================
+     4. PROJECTS FILTER + SORT
+     3 dropdowns: category, sort (newest/oldest), and level (beginner/advanced).
+     ========================================================================= */
+  const filterCategory = document.getElementById('filter-category');
+  const sortProjects = document.getElementById('sort-projects');
+  const filterLevel = document.getElementById('filter-level');
+  const projectsMessage = document.getElementById('projects-message');
+  const projectsGrid = document.querySelector('#projects .projects-grid');
+  const projectCards = Array.from(document.querySelectorAll('#projects .project-card'));
 
+  function updateProjects() {
+    if (!projectsGrid || !projectCards.length) return;
+
+    const selectedCategory = filterCategory.value;
+    const selectedSort = sortProjects.value;
+    const selectedLevel = filterLevel.value;
+
+    let filteredProjects = projectCards.filter(card => {
+      const matchCategory =
+        selectedCategory === 'all' || card.dataset.category === selectedCategory;
+
+      const matchLevel =
+        selectedLevel === 'all' || card.dataset.level === selectedLevel;
+
+      return matchCategory && matchLevel;
+    });
+
+    filteredProjects.sort((a, b) => {
+      const yearA = Number(a.dataset.year);
+      const yearB = Number(b.dataset.year);
+
+      if (selectedSort === 'newest') {
+        return yearB - yearA;
+      } else {
+        return yearA - yearB;
+      }
+    });
+
+    projectCards.forEach(card => {
+      card.style.display = 'none';
+    });
+
+    filteredProjects.forEach(card => {
+      card.style.display = 'block';
+      projectsGrid.appendChild(card);
+    });
+
+    if (selectedLevel === 'beginner') {
+      projectsMessage.textContent = 'Showing beginner-friendly projects.';
+    } else if (selectedLevel === 'advanced') {
+      projectsMessage.textContent = 'Showing more advanced projects.';
+    } else {
+      projectsMessage.textContent = 'Showing all projects.';
+    }
+  }
+
+  if (filterCategory) filterCategory.addEventListener('change', updateProjects);
+  if (sortProjects) sortProjects.addEventListener('change', updateProjects);
+  if (filterLevel) filterLevel.addEventListener('change', updateProjects);
+
+  updateProjects();
 
   /* =========================================================================
-     4. CONTACT FORM — validation + submission feedback
+     5. CONTACT FORM — validation + submission feedback
      ─────────────────────────────────────────────────────
      ========================================================================= */
   const contactForm  = document.getElementById('contact-form');
@@ -179,13 +241,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* =========================================================================
-     5. FOOTER YEAR
+     6. FOOTER YEAR
      ========================================================================= */
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* =========================================================================
-   DID YOU KNOW? — FACT API
+   7.DID YOU KNOW? — FACT API
    ========================================================================= */
   const factText = document.getElementById('fact-text');
   const factStatus = document.getElementById('fact-status');
