@@ -72,10 +72,36 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+/* =========================================================================
+   3. DARK MODE
+   ========================================================================= */
+  const themeToggle = document.getElementById('theme-toggle');
 
+  // Load saved theme from localStorage
+  const savedTheme = localStorage.getItem('theme');
+
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeToggle.textContent = '☀️';
+  }
+
+  // Toggle theme on click
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+
+      const isDark = document.body.classList.contains('dark-mode');
+
+      // Save state
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+      // Change icon
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+    });
+  }
 
   /* =========================================================================
-     3. SCROLL-REVEAL
+     4. SCROLL-REVEAL
      Add class="reveal" to any element in the HTML.
      Optional: add data-delay="150" (ms) for staggered entrance.
      ========================================================================= */
@@ -93,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   revealEls.forEach(el => revealObs.observe(el));
  
   /* =========================================================================
-     4. PROJECTS FILTER + SORT
+     5. PROJECTS FILTER + SORT
      3 dropdowns: category, sort (newest/oldest), and level (beginner/advanced).
      ========================================================================= */
   const filterCategory = document.getElementById('filter-category');
@@ -156,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateProjects();
 
   /* =========================================================================
-     5. CONTACT FORM — validation + submission feedback
+     6. CONTACT FORM — validation + submission feedback
      ─────────────────────────────────────────────────────
      ========================================================================= */
   const contactForm  = document.getElementById('contact-form');
@@ -241,13 +267,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* =========================================================================
-     6. FOOTER YEAR
+     7. FOOTER YEAR
      ========================================================================= */
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* =========================================================================
-   7.DID YOU KNOW? — FACT API
+   8.DID YOU KNOW? — FACT API
    ========================================================================= */
   const factText = document.getElementById('fact-text');
   const factStatus = document.getElementById('fact-status');
@@ -280,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
     newFactBtn.addEventListener('click', loadFact);
   }
 
-  // load first fact automatically
   loadFact();
 
 });

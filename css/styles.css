@@ -856,3 +856,97 @@ h1, h2, h3, h4 {
 
   .footer-inner { flex-direction: column; text-align: center; }
 }
+
+/* =========================================================================
+   15. DARK MODE
+   ========================================================================= */
+/* Base */
+body.dark-mode {
+  background-color: #0f172a; /* deep navy */
+  color: #e5e7eb;
+}
+
+/* Typography*/
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4 {
+  color: #f8fafc;
+}
+
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode li {
+  color: #d1d5db;
+}
+
+/* Hero name (accent) */
+body.dark-mode .hero-name {
+  color: #d4a373; /* warm elegant tone */
+}
+
+/* Navbar */
+body.dark-mode #navbar {
+  background-color: #1e293b;
+}
+
+/* Sections */
+body.dark-mode .section {
+  background-color: #0f172a;
+}
+
+body.dark-mode .section--about,
+body.dark-mode .section--experience,
+body.dark-mode .section--projects,
+body.dark-mode .section--contact {
+  background-color: #111827;
+}
+
+/* Hero background */
+body.dark-mode .hero-card-bg {
+  background-color: #1e293b;
+}
+
+/* Cards */
+body.dark-mode .project-card,
+body.dark-mode .timeline-card,
+body.dark-mode .contact-form {
+  background-color: #1f2937;
+  color: #e5e7eb;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Inputs */
+body.dark-mode .form-input {
+  background-color: #111827;
+  color: #e5e7eb;
+  border: 1px solid #374151;
+}
+
+body.dark-mode .form-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Buttons */
+body.dark-mode .btn--primary {
+  background-color: #c4a484; /* warm beige */
+  color: #0f172a;
+}
+
+body.dark-mode .btn--primary:hover {
+  background-color: #b08968;
+}
+
+/* Links */
+body.dark-mode a {
+  color: #e5e7eb;
+}
+
+body.dark-mode a:hover {
+  color: #e6ccb2;
+}
+
+/* Footer */
+body.dark-mode .footer {
+  background-color: #020617;
+}
