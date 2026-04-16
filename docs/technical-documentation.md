@@ -1,116 +1,52 @@
-# Technical Documentation
+## Advanced Functionality (Assignment 3)
 
-## Project Summary
+### 1. API Integration – “Did You Know?”
+The application integrates an external API to fetch random facts:
+- API: https://uselessfacts.jsph.pl
+- Data is retrieved using the Fetch API
+- Facts are displayed dynamically in the DOM
+- Error handling displays a fallback message if the API fails
 
-This website is a responsive personal portfolio built with HTML, CSS, and JavaScript.  
-It functions as a visual CV and includes interactive features and responsive design as required in the assignment.
-
----
-
-## File Structure
-
-index.html  
-css/styles.css  
-js/script.js  
-docs/
-
-- index.html → Structure and content  
-- styles.css → Design system, layout, responsiveness  
-- script.js → Interactivity and form validation  
-- docs/ → AI report and documentation  
+Optional state enhancement:
+- The last fetched fact is stored using `localStorage` to improve user experience
 
 ---
 
-## HTML Structure
+### 2. Complex Logic – Project Filtering & Sorting
 
-The site uses semantic HTML elements:
+The Projects section includes multi-step logic:
+- Filtering by category (e.g., academic, web)
+- Filtering by difficulty level (beginner, advanced)
+- Sorting by year (newest or oldest)
 
-- <header> → Navigation
-- <main> → Content sections
-- <section> → Home, About, Experience, Projects, Contact
-- <footer> → Footer content
-
-### Sections
-
-Home  
-Hero introduction with large heading and tagline.
-
-About  
-Short bio, skill tags, coursework chips.
-
-Experience  
-Vertical left-spine timeline. Each entry includes date, role, organization, details, and tags.
-
-Projects  
-Card-based layout with title, description, and tech stack tags.
-
-Contact  
-Contact details, social links, and form with validation.
+Implementation details:
+- Uses `data-*` attributes (`data-category`, `data-year`, `data-level`)
+- Applies multiple conditions simultaneously
+- Dynamically updates the DOM based on user input
+- Displays conditional messages depending on selected level
 
 ---
 
-## CSS Design System
+### 3. State Management – Dark Mode
 
-CSS variables are used for:
-- Colors
-- Spacing
-- Typography
-- Shadows and transitions
+Dark mode is implemented using `localStorage`:
+- Users can toggle between light and dark themes
+- The selected theme is saved in `localStorage`
+- The theme persists after page reload
 
-Typography:
-- Headings → Cormorant Garamond
-- Body → Poppins
-
-Layout:
-- Flexbox for alignment and navigation
-- CSS Grid for project cards and form layout
-- Max-width container for consistent structure
+Implementation:
+- `classList.toggle()` is used to apply the theme
+- `localStorage.setItem()` stores the theme
+- `localStorage.getItem()` restores it on load
 
 ---
 
-## Responsive Design
+### 4. Enhanced Form Validation
 
-Breakpoints:
-- ≤ 900px (tablet)
-- ≤ 600px (mobile)
+The contact form includes additional validation rules:
+- Required field checks
+- Email format validation
+- Minimum message length validation
+- Dynamic error messages
 
-Adjustments include:
-- Grid collapsing into single columns
-- Mobile navigation toggle
-- Font size adjustments
-
----
-
-## JavaScript Features
-
-1. Smooth Scrolling  
-Enabled through CSS and anchor navigation.
-
-2. Active Navigation Highlight  
-Detects which section is visible and updates the navigation link.
-
-3. Mobile Navigation Toggle  
-Toggles menu visibility using class manipulation and aria attributes.
-
-4. Contact Form Validation  
-Validates required fields and displays feedback without backend processing.
-
----
-
-## Accessibility & Performance
-
-- Semantic HTML structure
-- Proper form labels
-- ARIA attributes
-- High contrast colors
-- Lightweight implementation (no frameworks)
-
----
-
-## Scalability
-
-- Timeline entries and project cards can be duplicated easily.
-- CSS variables allow theme updates.
-- Modular JS allows additional features later.
-
-This portfolio serves as a foundation for future development.
+This ensures more robust user input handling.

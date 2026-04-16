@@ -410,8 +410,6 @@ h1, h2, h3, h4 {
   color: var(--c-gray);
 }
 
-/* Coursework chips */
-.coursework { }
 
 .coursework__title {
   font-family: var(--font-heading);
