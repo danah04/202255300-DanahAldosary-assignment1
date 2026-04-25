@@ -56,6 +56,10 @@ https://dribbble.com/shots/26844524-Personal-portfolio-website-header
 
 ## How to Run Locally
 
+You can access the deployed website at the following link: https://danah04.github.io/202255300-DanahAldosary-assignment4/
+
+or:
+
 1. Clone the repository:
 git clone https://github.com/your-username/id-name-assignment1.git
 
